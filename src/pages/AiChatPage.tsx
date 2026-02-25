@@ -8,10 +8,8 @@ import {
   Form,
   Input,
   InputNumber,
-  Radio,
   Select,
   Space,
-  Tag,
   Typography,
   message,
 } from 'antd';
@@ -20,7 +18,6 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import type { Role } from '../shared/types';
-import { ROLE_LABEL } from '../shared/types';
 import { streamText } from '../shared/stream';
 
 import { postCheck } from "../shared/api";
@@ -29,14 +26,6 @@ import {chatStore} from "../stores/chat.ts";
 import {userStore} from "../stores/user.ts";
 
 const { Text, Title } = Typography;
-
-type GuidelineScope = 'ru_minzdrav' | 'intl' | 'mixed';
-
-const GUIDELINE_SCOPE_LABEL: Record<GuidelineScope, string> = {
-  ru_minzdrav: 'Минздрав РФ (приоритет)',
-  intl: 'NCCN/ESMO (международные)',
-  mixed: 'Смешанный (приоритет РФ)',
-};
 
 const sexOptions = [
   { label: 'Мужской', value: 'male' },
@@ -193,19 +182,6 @@ export function AiChatPage() {
 
   const role = watch('role');
   const guidelineScope = watch('options.guideline_scope');
-
-  const roleHint = useMemo(() => {
-    const r: Role = role;
-    return r === 'doctor'
-      ? 'Режим врача: структурированные поля + клиническая терминология.'
-      : 'Режим пациента: минимальные поля + объяснение простыми словами.';
-  }, [role]);
-
-  const scopeHint = useMemo(() => {
-    if (guidelineScope === 'ru_minzdrav') return 'Ответ будет опираться на клинические рекомендации Минздрава РФ.';
-    if (guidelineScope === 'intl') return 'Ответ будет опираться на международные гайдлайны (NCCN/ESMO).';
-    return 'Ответ может использовать оба источника, приоритет — Минздрав РФ.';
-  }, [guidelineScope]);
 
   const stopStreaming = () => {
     abortRef.current?.abort();
