@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   Alert,
   Button,
@@ -17,7 +17,6 @@ import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import type { Role } from '../shared/types';
 import { streamText } from '../shared/stream';
 
 import { postCheck } from "../shared/api";
@@ -181,7 +180,6 @@ export function AiChatPage() {
   });
 
   const role = watch('role');
-  const guidelineScope = watch('options.guideline_scope');
 
   const stopStreaming = () => {
     abortRef.current?.abort();
